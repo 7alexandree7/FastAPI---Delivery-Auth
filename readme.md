@@ -24,8 +24,8 @@
  3.  utilizar uma const db e atribuir a função *create_engine* do nosso sqlalchemy, passando como parametro a URL do banco  => db = create_engine("sqlite:///database.db")
  4.  Criar nossa Base para o banco de dado, com o *declarative_base*
  5.  Criar as classes / tabela no nosso banco de dados
-    Usar um parametro para a classe __tablename__ setar manualmente o nome da tabela
-    Definir os valores para cada tabela
+    - Usar um parametro para a classe __tablename__ setar manualmente o nome da tabela
+    - Definir os valores para cada tabela
  6.  Importar da nossa orm sqlalchemy o *Column*, para tipar nossos valores
  7.  Depois de importar o *Column*, importamos tambem os tipos de dados que usaremos nas nossas tabelas, como String | Integer | Boolean | Float | ForeignKey ex: id = Column("id", Integer)
    - Parametros importantes para a criação de cada coluna na nossa classe
@@ -37,8 +37,8 @@
       - *ForeignKey()* = Chave estrangeira, quando queremos atribuir a um valor da nossa tabela, um valor de outra tabela ex *user = Column("user", ForeignKey("users.id"))*
  8.  Criar a função __init__, responsável por inicializar os dados do objeto ao criar um novo registro, atribuindo valores aos atributos da classe. Essa função não cria tabelas nem colunas.
  9.  Tipar como um ENUM do ts, baixando a lib *sqlalchemy_utils* importando *from sqlalchemy_utils.types import ChoiceType*
-    criando uma tupla *STATUS_CHOICE = (("pendente", "pendente"), ("cancelado", "cancelado"), ("finalizado", "finalizado"))*
-    Adicionando na coluna *status = Column("status", ChoiceType(choices=STATUS_CHOICE))*
+      - criando uma tupla *STATUS_CHOICE = (("pendente", "pendente"), ("cancelado", "cancelado"), ("finalizado", "finalizado"))*
+      - Adicionando na coluna *status = Column("status", ChoiceType(choices=STATUS_CHOICE))*
 
 
 ## *Config + Migrations (Alembic)*
