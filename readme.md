@@ -55,3 +55,5 @@
 #   - Gera um arquivo de migration
 #   - Não cria tabelas / Não aplica nada no banco
 #   - Pode criar o arquivo .db vazio só por abrir a conexão (SQLite) 👉 Ele só escreve o plano, não executa.
+# 5 - Executar a migração *alembic upgrade head* - *usar a extensão SQLite Viewr, para visualizar as tabelas do seu banco*
+# 6 - A cada alteração, sendo remoção adição, deve-se criar uma nova migration no banco de dados
