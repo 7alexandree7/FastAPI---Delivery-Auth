@@ -5,8 +5,8 @@ db = create_engine("sqlite:///db/database.db")
 
 Base = declarative_base()
 
-class Usuario(Base):
-    __tablename__ = "usuarios"
+class User(Base):
+    __tablename__ = "users"
 
     id = Column("id", Integer, autoincrement=True, primary_key=True)
     name = Column("name", String)
