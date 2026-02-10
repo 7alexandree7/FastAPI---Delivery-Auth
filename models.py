@@ -38,3 +38,21 @@ class Order(Base):
         self.user = user
         self.status = status
         self.price = price
+
+
+class OrderedItem(Base):
+    __tablename__ = "ordered_items"
+
+    id = Column("id", Integer, autoincrement=True, primary_key=True)
+    quantity = Column("quantity", Integer)
+    flavor = Column("flavor", String)
+    size = Column("size", String)
+    unit_price = Column("unit_price", Float)
+    order = Column("order", ForeignKey("orders.id"))
+
+    def __init__ (self, quantity, falvor, size, unit_price, order):
+        self.quantity = quantity
+        self.flavor = falvor
+        self.size = size
+        self.unit_price = unit_price
+        self.order = order
