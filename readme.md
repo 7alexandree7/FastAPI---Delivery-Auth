@@ -30,6 +30,25 @@
  14. Sempre quando o usuario for fazer algo que não deve, não devemos usar o return e sim o raise, quando se trata de devolver o status_http
 
 
+## Criação de Rota De Login da conta
+
+1. Na rota de login, vamos passar nosso email e senha, nossa API vai devolver um token, aonde com esse token eu vou usar em todas as rotas que pede que tenha um usuario logado
+2. Iremos utilizar o formato token via (JWT)
+3. Criar um Schema para o login recebendo como parametro do schema o email e a senha
+4. tipando a Session e usando o Depends junto com nosso method Depends(get_session)
+5. Fazer uma consulta no banco, para chekar se existe de fato esse usuario com o respesctivo email
+6. Se não existir o usuario, retornar => raise HTTPException(status_code=404, detail="user not found")
+7. Caso exista um usuario no bloco else. Criar um usuario
+8. Criar um token JWT
+
+
+## Criação de Rota De Pedido
+
+1. Na rota de login, vamos passar nosso email e senha, nossa API vai devolver um token, aonde com esse token eu vou usar em todas as rotas que pede que tenha um usuario logado
+2. Iremos utilizar o formato token via (JWT)
+3. Retornar um dicionario informando return { "access_token": nomeDaVariavel, "token_type": "Bearer}
+
+
 ## Gerenciamento de Sessão
 
  1. Se eu tiver varias rotas que edita meu banco de dados, significa que eu vou ter que repetir esse codigo em cada rota, em cada parte do codigo
