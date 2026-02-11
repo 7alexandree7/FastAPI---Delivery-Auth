@@ -2,11 +2,12 @@ from pydantic import BaseModel
 from typing import Optional
 
 class UserSchema(BaseModel):
-    name = str
-    email = str
-    password = str
-    is_active: Optional[bool]
-    admin: Optional[bool]
+    name: str
+    email: str
+    password: str
+    is_active: Optional[bool] = None
+    admin: Optional[bool] = None
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
