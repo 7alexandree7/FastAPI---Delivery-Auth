@@ -5,6 +5,7 @@ from models.models import User
 from schema.schemas import UserSchema, LoginSchema
 from db.session import get_session
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from main import bcrypt_context
 from sqlalchemy.orm import Session
 from datetime import timedelta
@@ -48,14 +49,25 @@ async def login(loginSchema: LoginSchema, session: Session = Depends(get_session
     }
 
 
-
-@auth_route.get("/refresh")
-async def refresh_token(token):
-    user = verify_token(token)
+@auth_route.post("/login-form")
+async def login_form(data_form: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
+    user = authenticate_user(data_form.username, data_form.password, session)
     access_token = create_token(user.id)
 
     return {
         "access_token": access_token,
-        "refresh_token": refresh_token,
+        "token_type": "Bearer",
+    }
+
+
+
+@auth_route.post("/refresh")
+async def refresh_token(user: User = Depends(verify_token)):
+    new_access_token = create_token(user.id)
+    new_refresh_token = create_token(user.id, duration_token=timedelta(days=7))
+
+    return {
+        "access_token": new_access_token,
+        "refresh_token": new_refresh_token,
         "token_type": "Bearer",
     }
