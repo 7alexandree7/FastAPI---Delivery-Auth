@@ -39,7 +39,21 @@
 5. Fazer uma consulta no banco, para chekar se existe de fato esse usuario com o respesctivo email
 6. Se não existir o usuario, retornar => raise HTTPException(status_code=404, detail="user not found")
 7. Caso exista um usuario no bloco else. Criar um usuario
-8. Criar um token JWT / Verify password
+8. Criar uma função authenticate_user que recebe 3 parametros(email, password, session)
+9. realiza a query no banco para ver se existe um usuario com aquele email user = session.query(User).filter(User.email == email).first()
+10. Verifica se tem ou não com condicional
+11. Faz a verify do password, com a senha que inserimos, com a senha cadastrada no banco
+12. Se tudo der certo retorna o user
+13. chamamos a função dentro da rota, passando os 3 parametros user = authenticate_user(loginSchema.email, loginSchema.password, session)
+14. utilizamos o access_token e o refresh_token que vem da função create_token()
+15. Para o access_token, passamos o id do usuario
+16. para o refresh_token, como segundo parametro, passamos o duration
+17. retornamos em um dicionarios
+      return {
+          "access_token": access_token,
+         "refresh_token": refresh_token,
+         "token_type": "Bearer",
+     }
 
 
 ## Criação de Rota De Pedido
@@ -150,7 +164,7 @@
 
 
 
-## TOKEN JWT  + Refresh token
+## TOKEN JWT  + Refresh token 
 
 1. Criar uma pasta chamada security
 2. Criar a função dentro dessa pasta para depois exportar onde precisar
@@ -165,3 +179,19 @@
     - pra na proxima vez que ele precisar de um novo access_token  ele não precisar me dar o email e senha dele, ele vai me dar o refresh token e eu vou gerar um novo access_token
     - quando o usuario me manda as informações de login, eu não vou gerar um unico token, vou gerar o access_token e o refresh_token
 11. Diferença do acces_token e refresh_token é a duração deles
+12. na função create_token, passar como segndo parametro a duration_token, por padrão é a o nosso tempo que definimos
+13. Passar esse parametro na definição de expiração do token
+
+14. def create_token(id_user, duration_token=timedelta(minutes=ACCESS_TOKEN_EXPIRES_MINUTES)):
+    expiration_date = datetime.now(timezone.utc) + duration_token
+    dic_info = { "sub": id_user, "exp": expiration_date }
+    encoded_jwt = jwt.encode(dic_info, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+    na função de login
+
+        return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "Bearer",
+    }
