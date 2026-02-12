@@ -143,12 +143,6 @@
 
 
 
- ## Anotações Derivadas
-
- 1. Node/Express + Mongoose/Prisma → ORM/ODM cuida da sessão/conexão. Você só chama métodos.
- 2. Python + FastAPI + SQLAlchemy → você precisa criar e gerenciar a session por rota.
-
-
 ## Diferença do Models para Schemas
 
 1. Model representa a estrutura da tabela no banco de dados
@@ -195,3 +189,19 @@
         "refresh_token": refresh_token,
         "token_type": "Bearer",
     }
+
+
+
+## VERIFY_TOKEN
+
+
+
+
+
+
+
+
+ ## Anotações Derivadas
+
+ 1. Node/Express + Mongoose/Prisma → ORM/ODM cuida da sessão/conexão. Você só chama métodos.
+ 2. Python + FastAPI + SQLAlchemy → você precisa criar e gerenciar a session por rota.
