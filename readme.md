@@ -1,3 +1,6 @@
+ ![alt text](img/image3.png)
+ ![alt text](img/image4.png)
+ 
  uvicorn main:app --reload = run the server
 
  ## Configuração Inicial
@@ -295,3 +298,98 @@ async def refresh_token(user: User = Depends(verify_token)):
 
  1. Node/Express + Mongoose/Prisma → ORM/ODM cuida da sessão/conexão. Você só chama métodos.
  2. Python + FastAPI + SQLAlchemy → você precisa criar e gerenciar a session por rota.
+
+
+ ## Remover o item de um pedido
+ @order_route.post("order/remove-item/{id_item_order}")
+async def remove_item_to_order(id_item_order: int, session: Session = Depends(get_session), user: User = Depends(verify_token)):
+
+    item_order = session.query(OrderedItem).filter(OrderedItem.id == id_item_order).first()
+    order = session.query(Order).filter(Order.id == item_order.order.id).first()
+
+    if not item_order:
+        raise HTTPException(status_code=404, detail="item not found")
+    
+    if not (user.admin or user.id != order.user):
+        raise HTTPException(status_code=403, detail="you dont have permission to add item to this order")
+    
+    session.delete(item_order)
+    order.calculate_price()
+    session.commit()
+
+    return {
+        "message": "Item removed sucessfully",
+        "quantity_order_items": len(order.items),
+        "order": order
+    } 
+
+
+## Finalizar um Pedido
+
+@order_route.post("/order/finalize/{order_id}")
+async def finalize_order(order_id: int, user: User = Depends(verify_token), session: Session = Depends(get_session)):
+
+    order = session.query(Order).filter(Order.id == order_id).first()
+
+    if not order:
+        raise HTTPException(status_code=404, detail="order not found")
+    
+    if not (user.admin or order.user == user.id):
+        raise HTTPException(status_code=403, detail="you dont have permission to cancel this order")
+    
+    order.status = "finalizado"
+    session.commit()
+
+  
+    return {
+        "message": f"order {order.id} finalized",
+        "order": order,
+        "user": f"Pedido cancelado por {user.name}"
+    } 
+
+
+
+## Vizualizar um pedido
+
+@order_route.get("order/{order_id}")
+async def view_order(order_id: int, user: User = Depends(verify_token), session: Session = Depends(get_session)):
+
+    order =  session.query(Order).filter(Order.id == order_id).first()
+
+    if not order:
+        raise HTTPException(status_code=404, detail="order not found")
+    
+    if not (user.admin or order.user == user.id):
+        raise HTTPException(status_code=403, detail="you dont have permission to cancel this order")
+    
+    return {
+        "quantity_order_items": len(order.items),
+        "order": order
+    }
+
+![alt text](img/image.png)
+
+
+## visualizar todos os pedidos de um usuario
+
+@order_route.get("/order/user/current")
+async def view_current_orders( session: Session = Depends(get_session), user: User = Depends(verify_token)):
+
+    orders = session.query(Order).filter(Order.user == user.id).all()
+
+    return {
+        "orders": orders
+    }
+
+![alt text](img/image2.png)
+
+
+
+
+## Criar um Schema para a resposta 
+
+1. Serve para definir quais tipos de dados vc quer exibir na saida da requisição, do que o dicionario inteiro
+2. passando na requisição @order_route.get("/order/user/current", response_model=ResponseOrderSchema)
+3. response_model=ResponseOrderSchema
+4. Importar o from typing import List
+5. Transformar minha response em uma lista tipada response_model=List[ResponseOrderSchema]
