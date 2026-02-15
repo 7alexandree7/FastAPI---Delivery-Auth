@@ -37,3 +37,14 @@ class OrderedItemSchema(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+
+
+class ResponseOrderSchema(BaseModel):
+    id: int
+    status: str
+    price: float
+
+    model_config = {
+        "from_attributes": True
+    }
